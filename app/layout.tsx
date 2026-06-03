@@ -1,0 +1,50 @@
+import type { Metadata, Viewport } from "next";
+import "./globals.css";
+
+export const metadata: Metadata = {
+  title: {
+    default: "Design Marketplace",
+    template: "%s | Design Marketplace",
+  },
+  description:
+    "A curated marketplace for premium design assets, templates, and resources.",
+  keywords: ["design", "marketplace", "templates", "assets", "UI", "graphics"],
+  authors: [{ name: "Design Marketplace Team" }],
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: "https://design-marketplace.com",
+    siteName: "Design Marketplace",
+    title: "Design Marketplace",
+    description: "A curated marketplace for premium design assets and resources.",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Design Marketplace",
+    description: "A curated marketplace for premium design assets and resources.",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  themeColor: "#0ea5e9",
+};
+
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return (
+    <html lang="en" suppressHydrationWarning>
+      <body className="min-h-screen bg-white font-sans">
+        {children}
+      </body>
+    </html>
+  );
+}

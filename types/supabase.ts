@@ -1,10 +1,4 @@
-// Auto-generate this file by running: npx supabase gen types typescript --local
-// Placeholder until Supabase project is connected.
-export type Database = {
-  public: {
-    Tables: Record<string, never>;
-    Views: Record<string, never>;
-    Functions: Record<string, never>;
-    Enums: Record<string, never>;
-  };
-};
+// Re-exports Database from the hand-authored types.
+// Replace both files with `npx supabase gen types typescript --local`
+// once your Supabase project is linked.
+export type { Database } from "./database";

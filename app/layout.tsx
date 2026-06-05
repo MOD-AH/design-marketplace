@@ -36,6 +36,8 @@ export const viewport: Viewport = {
   themeColor: "#0ea5e9",
 };
 
+import { Navbar } from "@/components/Navbar";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -43,8 +45,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className="min-h-screen bg-white font-sans">
-        <AuthProvider>{children}</AuthProvider>
+      <body className="min-h-screen bg-[#0a0b0e] font-sans text-white">
+        <AuthProvider>
+          <Navbar />
+          {children}
+        </AuthProvider>
       </body>
     </html>
   );

@@ -6,6 +6,7 @@ const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 
 // Singleton for Client Components — anon key is safe to expose
 export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey);
+export const supabaseBrowser = supabase;
 
 // Factory for Server Components and Route Handlers — never call from client code
 export function createServerClient() {

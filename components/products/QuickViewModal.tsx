@@ -2,15 +2,20 @@
 
 import { useEffect } from "react"
 import Image from "next/image"
-import { X, Star, Download, ShoppingBag, ExternalLink } from "lucide-react"
+import Link from "next/link"
+import { X, Star, ShoppingBag, ExternalLink } from "lucide-react"
 import type { Product } from "./ProductCard"
+import { CheckoutButton } from "@/components/CheckoutButton"
 
 type Props = {
   product: Product | null
   onClose: () => void
+  buyerId: string | null
+  buyerEmail?: string
+  buyerName?: string
 }
 
-export default function QuickViewModal({ product, onClose }: Props) {
+export default function QuickViewModal({ product, onClose, buyerId, buyerEmail, buyerName }: Props) {
   useEffect(() => {
     if (!product) return
     const handler = (e: KeyboardEvent) => e.key === "Escape" && onClose()
@@ -84,10 +89,26 @@ export default function QuickViewModal({ product, onClose }: Props) {
               <div className="text-2xl font-bold text-white">
                 ₹{product.price.toLocaleString("en-IN")}
               </div>
-              <button className="w-full flex items-center justify-center gap-2 bg-amber-400 hover:bg-amber-300 text-black font-bold py-3 rounded-2xl transition-colors">
-                <ShoppingBag size={16} />
-                Buy Now
-              </button>
+              {buyerId ? (
+                <CheckoutButton
+                  productIds={[product.id]}
+                  buyerId={buyerId}
+                  buyerEmail={buyerEmail}
+                  buyerName={buyerName}
+                  className="w-full flex items-center justify-center gap-2 bg-amber-400 hover:bg-amber-300 text-black font-bold py-3 rounded-2xl transition-colors disabled:opacity-50"
+                >
+                  <ShoppingBag size={16} />
+                  Buy Now
+                </CheckoutButton>
+              ) : (
+                <Link
+                  href={`/login?from=/products`}
+                  className="w-full flex items-center justify-center gap-2 bg-amber-400 hover:bg-amber-300 text-black font-bold py-3 rounded-2xl transition-colors"
+                >
+                  <ShoppingBag size={16} />
+                  Buy Now
+                </Link>
+              )}
               <a
                 href={`/products/${product.id}`}
                 className="w-full flex items-center justify-center gap-2 bg-white/5 hover:bg-white/10 text-white text-sm font-medium py-2.5 rounded-2xl transition-colors"

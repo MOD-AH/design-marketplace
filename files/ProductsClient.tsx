@@ -136,6 +136,7 @@ export default function ProductsClient({
                     key={product.id}
                     product={product}
                     onQuickView={setQuickViewProduct}
+                    buyerId={null}
                   />
                 ))}
               </div>
@@ -167,6 +168,7 @@ export default function ProductsClient({
       <QuickViewModal
         product={quickViewProduct}
         onClose={() => setQuickViewProduct(null)}
+        buyerId={null}
       />
     </div>
   )

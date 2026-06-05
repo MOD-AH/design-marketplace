@@ -2,7 +2,9 @@
 
 import { useState } from "react"
 import Image from "next/image"
+import Link from "next/link"
 import { Star, Eye, ShoppingBag, Heart } from "lucide-react"
+import { CheckoutButton } from "@/components/CheckoutButton"
 
 export type Product = {
   id: string
@@ -24,9 +26,12 @@ export type Product = {
 type Props = {
   product: Product
   onQuickView: (product: Product) => void
+  buyerId: string | null
+  buyerEmail?: string
+  buyerName?: string
 }
 
-export default function ProductCard({ product, onQuickView }: Props) {
+export default function ProductCard({ product, onQuickView, buyerId, buyerEmail, buyerName }: Props) {
   const [wished, setWished] = useState(false)
   const [imgError, setImgError] = useState(false)
 
@@ -133,10 +138,26 @@ export default function ProductCard({ product, onQuickView }: Props) {
           <span className="text-base font-bold text-white">
             ₹{product.price.toLocaleString("en-IN")}
           </span>
-          <button className="flex items-center gap-1.5 bg-amber-400 hover:bg-amber-300 text-black text-xs font-bold px-3 py-1.5 rounded-full transition-colors">
-            <ShoppingBag size={12} />
-            Buy
-          </button>
+          {buyerId ? (
+            <CheckoutButton
+              productIds={[product.id]}
+              buyerId={buyerId}
+              buyerEmail={buyerEmail}
+              buyerName={buyerName}
+              className="flex items-center gap-1.5 bg-amber-400 hover:bg-amber-300 text-black text-xs font-bold px-3 py-1.5 rounded-full transition-colors disabled:opacity-50"
+            >
+              <ShoppingBag size={12} />
+              Buy
+            </CheckoutButton>
+          ) : (
+            <Link
+              href={`/login?from=/products`}
+              className="flex items-center gap-1.5 bg-amber-400 hover:bg-amber-300 text-black text-xs font-bold px-3 py-1.5 rounded-full transition-colors"
+            >
+              <ShoppingBag size={12} />
+              Buy
+            </Link>
+          )}
         </div>
       </div>
     </article>

@@ -1,7 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // sharp uses native binaries — keep it in Node.js, not bundled by webpack
-  serverExternalPackages: ["sharp"],
+  experimental: {
+    // sharp uses native binaries — keep it in Node.js, not bundled by webpack
+    serverComponentsExternalPackages: ["sharp"],
+  },
   images: {
     remotePatterns: [
       {

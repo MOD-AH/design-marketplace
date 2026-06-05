@@ -1,4 +1,5 @@
 import { Suspense } from "react"
+import { cookies } from "next/headers"
 import { createServerClient } from "@/lib/supabase"
 import type { LicenseType } from "@/types/database"
 import ProductsClient from "./ProductsClient"
@@ -44,6 +45,22 @@ function ProductsPageSkeleton() {
 
 async function ProductsFetcher({ searchParams }: { searchParams: SearchParams }) {
   const supabase = createServerClient()
+
+  // Resolve buyer profile from session cookie (null if not logged in)
+  const uid = cookies().get("firebase-session")?.value
+  let buyerId: string | null = null
+  let buyerEmail: string | null = null
+  let buyerName: string | null = null
+  if (uid) {
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("id, email, full_name")
+      .eq("firebase_uid", uid)
+      .single()
+    buyerId = profile?.id ?? null
+    buyerEmail = profile?.email ?? null
+    buyerName = profile?.full_name ?? null
+  }
 
   const { data: categories } = await supabase
     .from("categories")
@@ -113,6 +130,9 @@ async function ProductsFetcher({ searchParams }: { searchParams: SearchParams })
       currentPage={page}
       pageSize={PAGE_SIZE}
       hasMore={(count ?? 0) > page * PAGE_SIZE}
+      buyerId={buyerId}
+      buyerEmail={buyerEmail}
+      buyerName={buyerName}
     />
   )
 }

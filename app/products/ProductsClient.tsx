@@ -17,6 +17,9 @@ type Props = {
   currentPage: number
   pageSize: number
   hasMore: boolean
+  buyerId: string | null
+  buyerEmail: string | null
+  buyerName: string | null
 }
 
 const SORT_OPTIONS = [
@@ -33,6 +36,9 @@ export default function ProductsClient({
   currentPage,
   pageSize,
   hasMore,
+  buyerId,
+  buyerEmail,
+  buyerName,
 }: Props) {
   const router = useRouter()
   const params = useSearchParams()
@@ -150,6 +156,9 @@ export default function ProductsClient({
                     key={product.id}
                     product={product}
                     onQuickView={setQuickViewProduct}
+                    buyerId={buyerId}
+                    buyerEmail={buyerEmail ?? undefined}
+                    buyerName={buyerName ?? undefined}
                   />
                 ))}
               </div>
@@ -182,6 +191,9 @@ export default function ProductsClient({
       <QuickViewModal
         product={quickViewProduct}
         onClose={() => setQuickViewProduct(null)}
+        buyerId={buyerId}
+        buyerEmail={buyerEmail ?? undefined}
+        buyerName={buyerName ?? undefined}
       />
     </div>
   )

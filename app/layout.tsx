@@ -37,6 +37,7 @@ export const viewport: Viewport = {
 };
 
 import { Navbar } from "@/components/Navbar";
+import { ToastProvider } from "@/components/ui/Toast";
 
 export default function RootLayout({
   children,
@@ -49,6 +50,7 @@ export default function RootLayout({
         <AuthProvider>
           <Navbar />
           {children}
+          <ToastProvider />
         </AuthProvider>
       </body>
     </html>

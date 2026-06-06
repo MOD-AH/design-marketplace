@@ -5,9 +5,9 @@ import {
   Search, ArrowRight, ShoppingBag, User, Heart,
   TrendingUp, Users, DollarSign, Mail, Globe, MessageCircle, Send,
 } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/Button"
 import { CategoryStrip } from "@/components/category-strip"
-import { supabase } from "@/lib/supabase"
+import { supabase } from "@/lib/supabase/client"
 import type { ProductRow } from "@/types/database"
 
 type ProductWithRelations = ProductRow & {

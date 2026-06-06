@@ -81,12 +81,20 @@ export default async function SellerDashboardPage() {
     .order("created_at", { ascending: false })
     .limit(5)
 
-  const recentOrders = (recentOrdersData || []).map(item => ({
-    id: item.order.id,
+  type OrderItemRow = {
+    id: string
+    created_at: string
+    seller_payout: number
+    order: { id: string; status: string; total_amount: number } | null
+    product: { title: string } | null
+  }
+
+  const recentOrders = ((recentOrdersData as unknown as OrderItemRow[]) || []).map(item => ({
+    id: item.order?.id ?? item.id,
     created_at: item.created_at,
     total_amount: Number(item.seller_payout),
-    status: item.order.status,
-    items: [{ product: { title: item.product.title } }]
+    status: item.order?.status ?? "unknown",
+    items: [{ product: { title: item.product?.title ?? "Deleted" } }]
   }))
 
   // 4. Mock Chart Data (Group by month in a real app, here we mock for the last 6 months)

@@ -11,7 +11,7 @@ export function EarningsChart({ data }: EarningsChartProps) {
   
   // Create path for the line
   const points = data.map((d, i) => {
-    const x = (i / (data.length - 1)) * chartWidth;
+    const x = data.length > 1 ? (i / (data.length - 1)) * chartWidth : chartWidth / 2;
     const y = chartHeight - (d.amount / maxAmount) * chartHeight;
     return `${x},${y}`;
   }).join(" ");
@@ -40,6 +40,13 @@ export function EarningsChart({ data }: EarningsChartProps) {
           className="w-full h-full overflow-visible"
           preserveAspectRatio="none"
         >
+          <defs>
+            <linearGradient id="chartGradient" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#fbbf24" stopOpacity="0.5" />
+              <stop offset="100%" stopColor="#fbbf24" stopOpacity="0" />
+            </linearGradient>
+          </defs>
+
           {/* Grid lines */}
           {[0, 1, 2, 3].map(i => (
             <line
@@ -74,7 +81,7 @@ export function EarningsChart({ data }: EarningsChartProps) {
 
           {/* Points */}
           {data.map((d, i) => {
-            const x = (i / (data.length - 1)) * chartWidth;
+            const x = data.length > 1 ? (i / (data.length - 1)) * chartWidth : chartWidth / 2;
             const y = chartHeight - (d.amount / maxAmount) * chartHeight;
             return (
               <circle
@@ -90,12 +97,6 @@ export function EarningsChart({ data }: EarningsChartProps) {
             )
           })}
 
-          <defs>
-            <linearGradient id="chartGradient" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#fbbf24" stopOpacity="0.5" />
-              <stop offset="100%" stopColor="#fbbf24" stopOpacity="0" />
-            </linearGradient>
-          </defs>
         </svg>
 
         {/* X-Axis Labels */}

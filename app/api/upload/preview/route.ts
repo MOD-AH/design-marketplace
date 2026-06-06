@@ -1,7 +1,7 @@
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import sharp from "sharp";
-import { createServerClient } from "@/lib/supabase";
+import { createServerClient } from "@/lib/supabase/server";
 
 const PREVIEW_BUCKET = "previews";
 const MAX_SIZE_BYTES = 5 * 1024 * 1024; // 5 MB

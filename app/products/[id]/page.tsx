@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation"
+import { cookies } from "next/headers"
 import type { Metadata } from "next"
-import { createServerClient } from "@/lib/supabase"
+import { createServerClient } from "@/lib/supabase/server"
 import {
   ProductDetailPageClient,
   type ProductDetailData,
@@ -162,11 +163,34 @@ export default async function ProductPage({
     }
   })
 
+  // Resolve the buyer's Supabase profile UUID from the session cookie
+  const firebaseUid = cookies().get("firebase-session")?.value ?? null
+  let buyerId: string | null = null
+  let buyerEmail: string | undefined
+  let buyerName: string | undefined
+
+  if (firebaseUid) {
+    const { data: buyerProfile } = await supabase
+      .from("profiles")
+      .select("id, email, full_name, username")
+      .eq("firebase_uid", firebaseUid)
+      .single()
+
+    if (buyerProfile) {
+      buyerId = buyerProfile.id
+      buyerEmail = buyerProfile.email
+      buyerName = buyerProfile.full_name ?? buyerProfile.username ?? undefined
+    }
+  }
+
   return (
     <ProductDetailPageClient
       product={product}
       reviews={reviews}
       relatedProducts={relatedProducts}
+      buyerId={buyerId}
+      buyerEmail={buyerEmail}
+      buyerName={buyerName}
     />
   )
 }

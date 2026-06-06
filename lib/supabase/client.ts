@@ -11,3 +11,6 @@ if (!supabaseUrl || !supabaseAnonKey) {
 }
 
 export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey);
+
+// Alias kept for components that imported supabaseBrowser from the old lib/supabase.ts
+export const supabaseBrowser = supabase;

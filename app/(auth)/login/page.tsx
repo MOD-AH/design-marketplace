@@ -3,10 +3,10 @@
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { type FirebaseError } from "firebase/app"
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/Button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { signInWithGoogle, signInWithEmail, syncUserProfile } from "@/lib/auth"
+import { signInWithGoogle, signInWithEmail, signUpWithEmail } from "@/lib/auth"
 
 function getAuthErrorMessage(error: FirebaseError): string {
   switch (error.code) {
@@ -47,7 +47,7 @@ function AuthForm() {
     setGoogleLoading(true)
     try {
       const user = await signInWithGoogle()
-      await syncUserProfile(user)
+      // syncUserProfile is called by AuthProvider's onAuthStateChanged — no need to call it here
       router.push("/dashboard")
     } catch (err) {
       setError(getAuthErrorMessage(err as FirebaseError))
@@ -61,8 +61,10 @@ function AuthForm() {
     setError(null)
     setEmailLoading(true)
     try {
-      const user = await signInWithEmail(email, password)
-      await syncUserProfile(user)
+      const user = isLogin
+        ? await signInWithEmail(email, password)
+        : await signUpWithEmail(email, password, name)
+      // syncUserProfile is called by AuthProvider's onAuthStateChanged — no need to call it here
       router.push("/dashboard")
     } catch (err) {
       setError(getAuthErrorMessage(err as FirebaseError))

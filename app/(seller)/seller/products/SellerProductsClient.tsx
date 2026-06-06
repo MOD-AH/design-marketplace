@@ -9,7 +9,7 @@ import {
   X, Loader2, ImageOff, ChevronDown,
 } from "lucide-react"
 import { useAuth } from "@/components/AuthProvider"
-import { supabaseBrowser } from "@/lib/supabase"
+import { supabaseBrowser } from "@/lib/supabase/client"
 import type { ProductRow, ProductStatus, LicenseType } from "@/types/database"
 
 // ── Types ─────────────────────────────────────────────────────────────────────

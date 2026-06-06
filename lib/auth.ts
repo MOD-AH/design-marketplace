@@ -2,6 +2,8 @@ import {
   GoogleAuthProvider,
   signInWithPopup,
   signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  updateProfile,
   signOut as firebaseSignOut,
   type User,
   type UserCredential,
@@ -28,6 +30,18 @@ export async function signInWithGoogle(): Promise<User> {
 
 export async function signInWithEmail(email: string, password: string): Promise<User> {
   const result: UserCredential = await signInWithEmailAndPassword(auth, email, password);
+  return result.user;
+}
+
+export async function signUpWithEmail(
+  email: string,
+  password: string,
+  displayName?: string
+): Promise<User> {
+  const result: UserCredential = await createUserWithEmailAndPassword(auth, email, password);
+  if (displayName?.trim()) {
+    await updateProfile(result.user, { displayName: displayName.trim() });
+  }
   return result.user;
 }
 

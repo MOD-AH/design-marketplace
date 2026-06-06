@@ -1,6 +1,6 @@
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
-import { createServerClient } from "@/lib/supabase";
+import { createServerClient } from "@/lib/supabase/server";
 import type { LicenseType, ProductType } from "@/types/database";
 
 interface CreateProductBody {
@@ -15,15 +15,6 @@ interface CreateProductBody {
   previewPaths: string[];
   fileSizeBytes: number;
   fileFormats: string[];
-}
-
-function slugify(str: string): string {
-  return str
-    .toLowerCase()
-    .trim()
-    .replace(/[^\w\s-]/g, "")
-    .replace(/[\s_-]+/g, "-")
-    .replace(/^-+|-+$/, "");
 }
 
 // POST /api/products
@@ -85,10 +76,6 @@ export async function POST(request: Request) {
     categoryId = cat?.id ?? null;
   }
 
-  // ── Generate unique slug ──────────────────────────────────────────────────
-  const baseSlug = slugify(title);
-  const slug = `${baseSlug}-${crypto.randomUUID().slice(0, 8)}`;
-
   // ── Insert product ────────────────────────────────────────────────────────
   const { data: product, error } = await supabase
     .from("products")
@@ -96,7 +83,6 @@ export async function POST(request: Request) {
       seller_id: profile.id,
       category_id: categoryId,
       title: title.trim(),
-      slug,
       description: description?.trim() ?? null,
       price,
       file_url: designFilePath,

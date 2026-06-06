@@ -1,4 +1,4 @@
-import { supabase } from "@/lib/supabase"
+import { supabase } from "@/lib/supabase/client"
 import { NavbarClient } from "@/components/NavbarClient"
 
 // Fetches categories server-side so the Browse dropdown is populated instantly,

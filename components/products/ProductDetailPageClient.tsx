@@ -5,12 +5,13 @@ import Image from "next/image"
 import Link from "next/link"
 import {
   Star, Heart, ShoppingCart, ChevronRight,
-  Package, ShieldCheck, Download, Tag, Loader2,
+  Package, ShieldCheck, Download, Tag,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/Button"
 import { Badge } from "@/components/ui/Badge"
 import { Tabs } from "@/components/ui/Tabs"
+import { CheckoutButton } from "@/components/CheckoutButton"
 import ProductCard, { type Product } from "./ProductCard"
 
 // ── Shared types (imported by page.tsx) ──────────────────────────────────────
@@ -52,8 +53,9 @@ export type ProductDetailPageProps = {
   product: ProductDetailData
   reviews: Review[]
   relatedProducts: Product[]
-  // Phase 5: replaced with real Razorpay handler
-  onBuyNow?: (productId: string, price: number) => void
+  buyerId: string | null
+  buyerEmail?: string
+  buyerName?: string
 }
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -81,26 +83,15 @@ export function ProductDetailPageClient({
   product,
   reviews,
   relatedProducts,
-  onBuyNow,
+  buyerId,
+  buyerEmail,
+  buyerName,
 }: ProductDetailPageProps) {
   const [activeImage, setActiveImage] = useState(0)
   const [isWished, setIsWished] = useState(false)
-  const [buyLoading, setBuyLoading] = useState(false)
 
   const sellerName = product.seller?.full_name ?? product.seller?.username ?? "Unknown"
   const sellerInitial = sellerName[0]?.toUpperCase() ?? "?"
-
-  async function handleBuyNow() {
-    if (onBuyNow) {
-      onBuyNow(product.id, product.price)
-      return
-    }
-    // Phase 5: Razorpay checkout will be wired here
-    setBuyLoading(true)
-    await new Promise((r) => setTimeout(r, 500))
-    setBuyLoading(false)
-    console.info("Razorpay checkout — wired in Phase 5", { id: product.id, price: product.price })
-  }
 
   const productTabs = [
     {
@@ -373,18 +364,26 @@ export function ProductDetailPageClient({
                 </div>
 
                 <div className="grid grid-cols-5 gap-3">
-                  <Button
-                    onClick={handleBuyNow}
-                    disabled={buyLoading}
-                    className="col-span-4 h-14 rounded-2xl bg-amber-400 text-lg font-bold text-black shadow-[0_10px_20px_-10px_rgba(251,191,36,0.5)] transition-all hover:scale-[1.02] hover:bg-amber-300 active:scale-[0.98] disabled:opacity-70"
-                  >
-                    {buyLoading ? (
-                      <Loader2 size={20} className="mr-2 animate-spin" />
-                    ) : (
-                      <ShoppingCart size={20} className="mr-2" />
-                    )}
-                    Buy Now
-                  </Button>
+                  {buyerId ? (
+                    <CheckoutButton
+                      productIds={[product.id]}
+                      buyerId={buyerId}
+                      buyerEmail={buyerEmail}
+                      buyerName={buyerName}
+                      className="col-span-4 h-14 rounded-2xl bg-amber-400 text-lg font-bold text-black shadow-[0_10px_20px_-10px_rgba(251,191,36,0.5)] transition-all hover:scale-[1.02] hover:bg-amber-300 active:scale-[0.98] disabled:opacity-70 flex items-center justify-center gap-2"
+                    >
+                      <ShoppingCart size={20} />
+                      Buy Now
+                    </CheckoutButton>
+                  ) : (
+                    <Link
+                      href={`/login?from=/products/${product.id}`}
+                      className="col-span-4 h-14 rounded-2xl bg-amber-400 text-lg font-bold text-black shadow-[0_10px_20px_-10px_rgba(251,191,36,0.5)] transition-all hover:scale-[1.02] hover:bg-amber-300 active:scale-[0.98] flex items-center justify-center gap-2"
+                    >
+                      <ShoppingCart size={20} />
+                      Buy Now
+                    </Link>
+                  )}
                   <Button
                     variant="outline"
                     onClick={() => setIsWished(!isWished)}

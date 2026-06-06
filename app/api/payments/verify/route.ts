@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import crypto from "crypto";
-import { createServerClient } from "@/lib/supabase";
+import { createServerClient } from "@/lib/supabase/server";
 
 const PLATFORM_FEE_RATE = 0.2;
 const DESIGN_BUCKET = "designs";
@@ -94,7 +94,16 @@ export async function POST(request: Request) {
     })
   );
 
-  // Mark order as completed
+  // Insert order_items FIRST — if this fails the order stays "pending"
+  // and the buyer is not charged without receiving download links.
+  const { error: itemsError } = await supabase.from("order_items").insert(orderItems);
+
+  if (itemsError) {
+    console.error("Order items insert error:", itemsError);
+    return NextResponse.json({ error: "Failed to create order items" }, { status: 500 });
+  }
+
+  // Items are safely stored — now mark the order as completed.
   const { error: updateError } = await supabase
     .from("orders")
     .update({
@@ -106,15 +115,10 @@ export async function POST(request: Request) {
 
   if (updateError) {
     console.error("Order update error:", updateError);
+    // Items already inserted — roll back by deleting them so the
+    // order remains "pending" and can be retried or reconciled.
+    await supabase.from("order_items").delete().eq("order_id", orderId);
     return NextResponse.json({ error: "Failed to update order status" }, { status: 500 });
-  }
-
-  // Insert order_items
-  const { error: itemsError } = await supabase.from("order_items").insert(orderItems);
-
-  if (itemsError) {
-    console.error("Order items insert error:", itemsError);
-    return NextResponse.json({ error: "Failed to create order items" }, { status: 500 });
   }
 
   // Send confirmation email — non-blocking, failure does not abort the response

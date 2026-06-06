@@ -1,6 +1,7 @@
 "use client"
 
 import { useRef } from "react"
+import Link from "next/link"
 import {
   ChevronLeft, ChevronRight,
   Palette, ImageIcon, Shirt, Type, Grid3X3, Layers, Sparkles, PenTool, Hexagon,
@@ -56,13 +57,14 @@ export function CategoryStrip({ categories }: { categories: CategoryRow[] }) {
           {categories.map((cat) => {
             const Icon = ICON_MAP[cat.slug] ?? Hexagon
             return (
-              <button
+              <Link
                 key={cat.id}
+                href={`/products?category=${cat.slug}`}
                 className="group flex shrink-0 items-center gap-3 rounded-full border border-border bg-background px-5 py-3 transition-all hover:border-foreground/30 hover:bg-secondary"
               >
                 <Icon className="h-5 w-5 text-muted-foreground group-hover:text-foreground" />
                 <span className="text-sm font-medium">{cat.name}</span>
-              </button>
+              </Link>
             )
           })}
         </div>

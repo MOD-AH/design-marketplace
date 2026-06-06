@@ -1,6 +1,6 @@
 import { Suspense } from "react"
 import { cookies } from "next/headers"
-import { createServerClient } from "@/lib/supabase"
+import { createServerClient } from "@/lib/supabase/server"
 import type { LicenseType } from "@/types/database"
 import ProductsClient from "./ProductsClient"
 

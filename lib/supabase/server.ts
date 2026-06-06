@@ -14,3 +14,8 @@ if (!supabaseUrl || !supabaseServiceKey) {
 export const supabaseAdmin = createClient<Database>(supabaseUrl, supabaseServiceKey, {
   auth: { persistSession: false },
 });
+
+// Alias used by Route Handlers and Server Components that migrated from lib/supabase.ts
+export function createServerClient() {
+  return supabaseAdmin;
+}

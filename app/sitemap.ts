@@ -26,5 +26,56 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${APP_URL}/products`, lastModified: new Date(), changeFrequency: "daily", priority: 0.9 },
   ];
 
-  return [...staticUrls, ...productUrls];
+  const categoryUrls: MetadataRoute.Sitemap = [
+    {
+      url: `${APP_URL}/categories/logo-templates-small-business-india`,
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.8,
+    },
+    {
+      url: `${APP_URL}/categories/buy-design-templates-india`,
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.8,
+    },
+    {
+      url: `${APP_URL}/categories/merchandise-design-marketplace`,
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.7,
+    },
+    {
+      url: `${APP_URL}/categories/business-card-templates-india`,
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.7,
+    },
+    {
+      url: `${APP_URL}/categories/social-media-templates-india`,
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.7,
+    },
+    {
+      url: `${APP_URL}/categories/flyer-templates-india`,
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.6,
+    },
+    {
+      url: `${APP_URL}/categories/brand-identity-kit-india`,
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.6,
+    },
+    {
+      url: `${APP_URL}/categories/pitch-deck-templates-india`,
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.6,
+    },
+  ];
+
+  return [...staticUrls, ...categoryUrls, ...productUrls];
 }

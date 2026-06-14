@@ -1,1 +1,1 @@
-export { usePostHog } from "@posthog/next";
+export { usePostHog } from "posthog-js/react";

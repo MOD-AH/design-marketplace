@@ -15,14 +15,18 @@ export const revalidate = 3600
 // ── Static params: pre-render top 100 products by sales ───────────────────────
 
 export async function generateStaticParams() {
-  const supabase = createServerClient()
-  const { data } = await supabase
-    .from("products")
-    .select("id")
-    .eq("status", "published")
-    .order("total_sales", { ascending: false })
-    .limit(100)
-  return (data ?? []).map(({ id }) => ({ id }))
+  try {
+    const supabase = createServerClient()
+    const { data } = await supabase
+      .from("products")
+      .select("id")
+      .eq("status", "published")
+      .order("total_sales", { ascending: false })
+      .limit(100)
+    return (data ?? []).map(({ id }) => ({ id }))
+  } catch {
+    return []
+  }
 }
 
 // ── Metadata ──────────────────────────────────────────────────────────────────

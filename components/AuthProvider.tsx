@@ -12,6 +12,7 @@ import { onAuthStateChanged, type User } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 import { syncUserProfile } from "@/lib/auth";
 import { supabase } from "@/lib/supabase/client";
+import { usePostHog } from "@/lib/posthog";
 import type { ProfileRow } from "@/types/database";
 
 // ─── Context shape ────────────────────────────────────────────────────────────
@@ -37,6 +38,7 @@ const AuthContext = createContext<AuthContextValue>({
 // ─── Provider ────────────────────────────────────────────────────────────────
 
 export function AuthProvider({ children }: { children: ReactNode }) {
+  const posthog = usePostHog();
   const [state, setState] = useState<AuthState>({
     user: null,
     profile: null,
@@ -75,10 +77,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         // 3. Fetch the full profile row for use throughout the app.
         const profile = await fetchProfile(firebaseUser.uid);
 
+        // Identify the user in PostHog with their Supabase profile ID and properties.
+        if (profile) {
+          const accountAgeDays = Math.floor(
+            (Date.now() - new Date(profile.created_at).getTime()) / 86_400_000
+          );
+          posthog.identify(profile.id, {
+            email: profile.email,
+            is_seller: profile.is_seller,
+            account_age_days: accountAgeDays,
+          });
+        }
+
         setState({ user: firebaseUser, profile, loading: false });
       } else {
         // Clear the session cookie so middleware stops granting access.
         await fetch("/api/auth/session", { method: "DELETE" });
+        posthog.reset();
         setState({ user: null, profile: null, loading: false });
       }
     });

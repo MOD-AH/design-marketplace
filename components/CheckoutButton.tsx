@@ -1,21 +1,38 @@
 "use client";
 
+import { usePostHog } from "@/lib/posthog";
+
 export interface CheckoutButtonProps {
   productIds: string[];
   buyerId: string;
   buyerEmail?: string;
   buyerName?: string;
+  /** Price in INR — used for analytics only */
+  price?: number;
   className?: string;
   children?: React.ReactNode;
 }
 
-export function CheckoutButton({ className, children = "Buy Now" }: CheckoutButtonProps) {
+export function CheckoutButton({
+  productIds,
+  price,
+  className,
+  children = "Buy Now",
+}: CheckoutButtonProps) {
+  const posthog = usePostHog();
+  function handleClick() {
+    posthog.capture("checkout_started", {
+      product_ids: productIds,
+      price,
+    });
+    // Razorpay integration goes here
+  }
+
   return (
     <div>
-      <button disabled className={className} style={{ opacity: 0.5, cursor: "not-allowed" }}>
+      <button onClick={handleClick} className={className}>
         {children}
       </button>
-      <p className="mt-2 text-xs text-white/40 text-center">Payments coming soon</p>
     </div>
   );
 }

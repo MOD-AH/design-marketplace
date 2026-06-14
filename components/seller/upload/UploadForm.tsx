@@ -18,6 +18,7 @@ import { Button } from "@/components/ui/Button";
 import { FileZone } from "./FileZone";
 import { Badge } from "@/components/ui/Badge";
 import { toast } from "@/components/ui/Toast";
+import { usePostHog } from "@/lib/posthog";
 import {
   uploadDesignFile,
   uploadPreviewImage,
@@ -47,6 +48,7 @@ const CATEGORIES = [
 ];
 
 export function UploadForm() {
+  const posthog = usePostHog();
   const router = useRouter();
 
   const [currentStep, setCurrentStep] = useState(1);
@@ -227,6 +229,15 @@ export function UploadForm() {
         previewPaths,
         fileSizeBytes: designFiles[0]!.size,
         fileFormats: ext ? [ext.toUpperCase()] : [],
+      });
+
+      posthog.capture("design_uploaded", {
+        category: categorySlug || undefined,
+        license_type: license,
+        product_type: productType,
+        price: parseFloat(price) || 0,
+        preview_count: previewPaths.length,
+        tags,
       });
 
       toast({

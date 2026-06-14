@@ -1,12 +1,13 @@
 "use client"
 
-import { useState, useCallback, useTransition } from "react"
+import { useState, useCallback, useTransition, useEffect, useRef } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { Search, SlidersHorizontal, ArrowUpDown, Loader2 } from "lucide-react"
 import { useDebouncedCallback } from "use-debounce"
 import ProductCard, { type Product } from "@/components/products/ProductCard"
 import FilterSidebar from "@/components/products/FilterSidebar"
 import QuickViewModal from "@/components/products/QuickViewModal"
+import { usePostHog } from "@/lib/posthog"
 
 type Category = { id: string; name: string; slug: string }
 
@@ -40,23 +41,38 @@ export default function ProductsClient({
   buyerEmail,
   buyerName,
 }: Props) {
+  const posthog = usePostHog()
   const router = useRouter()
   const params = useSearchParams()
   const [isPending, startTransition] = useTransition()
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
   const [quickViewProduct, setQuickViewProduct] = useState<Product | null>(null)
 
-  // Replaces a single URL param and resets page to 1
+  // Replaces a single URL param and resets page to 1.
+  // Fires filter_applied for everything except search (q) and sort.
   const updateParam = useCallback(
     (key: string, value: string | null) => {
       const next = new URLSearchParams(params.toString())
       if (value) next.set(key, value)
       else next.delete(key)
       next.delete("page")
+      if (key !== "q" && key !== "sort" && value) {
+        posthog.capture("filter_applied", { filter_type: key, filter_value: value })
+      }
       startTransition(() => router.push(`/products?${next.toString()}`))
     },
     [params, router],
   )
+
+  // Track search_performed after navigation settles (results are then accurate)
+  const prevQuery = useRef(params.get("q") ?? "")
+  useEffect(() => {
+    const q = params.get("q") ?? ""
+    if (q && q !== prevQuery.current) {
+      posthog.capture("search_performed", { query: q, results_count: totalCount })
+    }
+    prevQuery.current = q
+  }, [params, totalCount])
 
   // 300 ms debounce on the search input
   const handleSearch = useDebouncedCallback((value: string) => {

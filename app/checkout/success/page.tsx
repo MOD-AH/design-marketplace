@@ -4,6 +4,7 @@ import Link from "next/link";
 import { CheckCircle, Download, Clock, ArrowRight } from "lucide-react";
 import { Badge } from "@/components/ui/Badge";
 import { createServerClient } from "@/lib/supabase/server";
+import { PurchaseTracker } from "@/components/PurchaseTracker";
 
 interface PageProps {
   searchParams: { orderId?: string };
@@ -193,6 +194,7 @@ export default async function CheckoutSuccessPage({ searchParams }: PageProps) {
           </Link>
         </div>
       </div>
+    <PurchaseTracker orderId={orderId} total={Number(order.total_amount)} productCount={items.length} />
     </main>
   );
 }

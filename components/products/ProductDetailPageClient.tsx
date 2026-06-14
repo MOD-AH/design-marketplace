@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import {
@@ -8,6 +8,7 @@ import {
   Package, ShieldCheck, Download, Tag,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { usePostHog } from "@/lib/posthog"
 import { Button } from "@/components/ui/Button"
 import { Badge } from "@/components/ui/Badge"
 import { Tabs } from "@/components/ui/Tabs"
@@ -87,8 +88,20 @@ export function ProductDetailPageClient({
   buyerEmail,
   buyerName,
 }: ProductDetailPageProps) {
+  const posthog = usePostHog()
   const [activeImage, setActiveImage] = useState(0)
   const [isWished, setIsWished] = useState(false)
+
+  useEffect(() => {
+    posthog.capture("product_viewed", {
+      product_id: product.id,
+      title: product.title,
+      price: product.price,
+      license_type: product.license_type,
+      product_type: product.product_type,
+    })
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [product.id])
 
   const sellerName = product.seller?.full_name ?? product.seller?.username ?? "Unknown"
   const sellerInitial = sellerName[0]?.toUpperCase() ?? "?"

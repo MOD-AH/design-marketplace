@@ -38,6 +38,7 @@ export const viewport: Viewport = {
 
 import { Navbar } from "@/components/Navbar";
 import { ToastProvider } from "@/components/ui/Toast";
+import { PostHogProvider } from "@/components/PostHogProvider";
 import Script from "next/script";
 
 export default function RootLayout({
@@ -48,11 +49,13 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className="min-h-screen bg-[#0a0b0e] font-sans text-white">
-        <AuthProvider>
-          <Navbar />
-          {children}
-          <ToastProvider />
-        </AuthProvider>
+        <PostHogProvider>
+          <AuthProvider>
+            <Navbar />
+            {children}
+            <ToastProvider />
+          </AuthProvider>
+        </PostHogProvider>
         <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="lazyOnload" />
       </body>
     </html>

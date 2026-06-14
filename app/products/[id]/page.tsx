@@ -39,27 +39,28 @@ export async function generateMetadata({
     .eq("id", params.id)
     .single()
 
-  if (!data) return { title: "Product Not Found | DesignMarket" }
+  if (!data) return { title: "Product Not Found" }
 
-  const seller = (data.profiles as any)?.username ?? "DesignMarket"
+  const seller = (data.profiles as any)?.username ?? "Design Marketplace"
   const description =
-    data.description?.slice(0, 160) ??
-    `Buy ${data.title} by ${seller} on DesignMarket — premium design assets.`
+    data.description?.slice(0, 155) ??
+    `Buy ${data.title} by ${seller} on Design Marketplace — premium design assets.`
   const ogImage = data.preview_urls[0]
 
   return {
-    title: `${data.title} | DesignMarket`,
+    title: data.title,
     description,
     openGraph: {
-      title: data.title,
+      title: `${data.title} by ${seller}`,
       description,
+      type: "website",
       ...(ogImage && {
         images: [{ url: ogImage, width: 1200, height: 630, alt: data.title }],
       }),
     },
     twitter: {
       card: "summary_large_image",
-      title: data.title,
+      title: `${data.title} by ${seller}`,
       description,
       ...(ogImage && { images: [ogImage] }),
     },
@@ -183,14 +184,51 @@ export default async function ProductPage({
     }
   }
 
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://design-marketplace.com"
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: product.title,
+    description: product.description ?? undefined,
+    image: product.preview_urls[0] ?? undefined,
+    url: `${appUrl}/products/${product.id}`,
+    brand: {
+      "@type": "Brand",
+      name: product.seller?.full_name ?? product.seller?.username ?? "Design Marketplace",
+    },
+    offers: {
+      "@type": "Offer",
+      price: product.price,
+      priceCurrency: "INR",
+      availability: "https://schema.org/InStock",
+      url: `${appUrl}/products/${product.id}`,
+    },
+    ...(product.review_count > 0 && {
+      aggregateRating: {
+        "@type": "AggregateRating",
+        ratingValue: product.avg_rating,
+        reviewCount: product.review_count,
+        bestRating: 5,
+        worstRating: 1,
+      },
+    }),
+  }
+
   return (
-    <ProductDetailPageClient
-      product={product}
-      reviews={reviews}
-      relatedProducts={relatedProducts}
-      buyerId={buyerId}
-      buyerEmail={buyerEmail}
-      buyerName={buyerName}
-    />
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <ProductDetailPageClient
+        product={product}
+        reviews={reviews}
+        relatedProducts={relatedProducts}
+        buyerId={buyerId}
+        buyerEmail={buyerEmail}
+        buyerName={buyerName}
+      />
+    </>
   )
 }

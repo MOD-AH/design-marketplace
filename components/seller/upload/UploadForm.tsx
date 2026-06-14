@@ -17,7 +17,7 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/Button";
 import { FileZone } from "./FileZone";
 import { Badge } from "@/components/ui/Badge";
-import { toast } from "@/components/ui/Toast";
+import { toast } from "sonner";
 import { usePostHog } from "@/lib/posthog";
 import {
   uploadDesignFile,
@@ -69,6 +69,8 @@ export function UploadForm() {
   // ── Validation errors ───────────────────────────────────────────────────────
   const [designErrors, setDesignErrors] = useState<(string | null)[]>([]);
   const [previewErrors, setPreviewErrors] = useState<(string | null)[]>([]);
+  const [titleError, setTitleError] = useState<string | null>(null);
+  const [priceError, setPriceError] = useState<string | null>(null);
 
   // ── Upload progress (per file, 0–100 or null) ───────────────────────────────
   const [designProgresses, setDesignProgresses] = useState<(number | null)[]>([]);
@@ -80,7 +82,7 @@ export function UploadForm() {
     const errs = files.map(validateDesignFile);
     const valid = files.filter((_, i) => !errs[i]);
     const invalid = errs.filter(Boolean);
-    if (invalid.length) toast({ type: "error", message: invalid[0]! });
+    if (invalid.length) toast.error(invalid[0]!);
     // Only allow one design file; replace existing
     setDesignFiles(valid.slice(0, 1));
     setDesignErrors(valid.slice(0, 1).map(() => null));
@@ -96,7 +98,7 @@ export function UploadForm() {
       i < previewProgresses.length ? (previewProgresses[i] ?? null) : null
     ));
     const firstErr = errs.find(Boolean);
-    if (firstErr) toast({ type: "error", message: firstErr });
+    if (firstErr) toast.error(firstErr);
   };
 
   const removeDesignFile = (idx: number) => {
@@ -127,30 +129,32 @@ export function UploadForm() {
   const validateStep = (): boolean => {
     if (currentStep === 1) {
       if (designFiles.length === 0) {
-        toast({ type: "error", message: "Please upload at least one design file." });
+        toast.error("Please upload at least one design file.");
         return false;
       }
       if (previewFiles.length === 0) {
-        toast({ type: "error", message: "Please upload at least one preview image." });
+        toast.error("Please upload at least one preview image.");
         return false;
       }
       if (designErrors.some(Boolean) || previewErrors.some(Boolean)) {
-        toast({ type: "error", message: "Fix file errors before continuing." });
+        toast.error("Fix file errors before continuing.");
         return false;
       }
     }
     if (currentStep === 2) {
       if (!title.trim()) {
-        toast({ type: "error", message: "Product title is required." });
+        setTitleError("Product title is required.");
         return false;
       }
+      setTitleError(null);
     }
     if (currentStep === 3) {
       const p = parseFloat(price);
       if (isNaN(p) || p < 0) {
-        toast({ type: "error", message: "Please enter a valid price." });
+        setPriceError("Please enter a valid price (0 or more).");
         return false;
       }
+      setPriceError(null);
     }
     return true;
   };
@@ -168,7 +172,7 @@ export function UploadForm() {
 
     try {
       // 1. Upload design file (with real XHR progress)
-      toast({ type: "loading", message: "Uploading design file…", duration: Infinity });
+      const uploadToastId = toast.loading("Uploading design file…");
 
       setDesignProgresses([0]);
       let designPath: string;
@@ -184,7 +188,7 @@ export function UploadForm() {
       }
 
       // 2. Upload preview images (watermarked via server)
-      toast({ type: "loading", message: "Processing previews…", duration: Infinity });
+      toast.loading("Processing previews…", { id: uploadToastId });
 
       const previewPaths: string[] = [];
       const initProgresses = previewFiles.map(() => 0);
@@ -213,7 +217,7 @@ export function UploadForm() {
       }
 
       // 3. Create the product row
-      toast({ type: "loading", message: "Creating your listing…", duration: Infinity });
+      toast.loading("Creating your listing…", { id: uploadToastId });
 
       const ext = designFiles[0]!.name.split(".").pop() ?? "";
 
@@ -240,17 +244,13 @@ export function UploadForm() {
         tags,
       });
 
-      toast({
-        type: "success",
-        message: "Product submitted for review! You'll be notified when it goes live.",
-        duration: 6000,
-      });
+      toast.success("Product submitted for review! You'll be notified when it goes live.", { id: uploadToastId });
 
       // Brief delay so the success toast is visible before navigation
       await new Promise((r) => setTimeout(r, 800));
       router.push("/seller/products");
     } catch (err) {
-      toast({ type: "error", message: (err as Error).message, duration: 8000 });
+      toast.error((err as Error).message);
       // Reset all progresses so user can retry
       setDesignProgresses(designFiles.map(() => null));
       setPreviewProgresses(previewFiles.map(() => null));
@@ -319,11 +319,16 @@ export function UploadForm() {
                 <input
                   type="text"
                   value={title}
-                  onChange={(e) => setTitle(e.target.value)}
+                  onChange={(e) => { setTitle(e.target.value); if (titleError) setTitleError(null); }}
                   placeholder="e.g. Premium 3D Abstract Icons"
                   maxLength={120}
-                  className="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-white placeholder:text-white/10 focus:outline-none focus:ring-2 focus:ring-amber-400/50"
+                  aria-invalid={!!titleError}
+                  className={cn(
+                    "w-full bg-white/5 border rounded-2xl p-4 text-white placeholder:text-white/10 focus:outline-none focus:ring-2",
+                    titleError ? "border-rose-500 focus:ring-rose-500/50" : "border-white/10 focus:ring-amber-400/50"
+                  )}
                 />
+                {titleError && <p className="text-xs text-rose-400 px-1">{titleError}</p>}
               </div>
 
               <div className="space-y-2">
@@ -413,15 +418,20 @@ export function UploadForm() {
                   <input
                     type="number"
                     value={price}
-                    onChange={(e) => setPrice(e.target.value)}
+                    onChange={(e) => { setPrice(e.target.value); if (priceError) setPriceError(null); }}
                     placeholder="0"
                     min="0"
-                    className="w-full bg-white/5 border border-white/10 rounded-2xl p-4 pl-8 text-white placeholder:text-white/10 focus:outline-none focus:ring-2 focus:ring-amber-400/50"
+                    aria-invalid={!!priceError}
+                    className={cn(
+                      "w-full bg-white/5 border rounded-2xl p-4 pl-8 text-white placeholder:text-white/10 focus:outline-none focus:ring-2",
+                      priceError ? "border-rose-500 focus:ring-rose-500/50" : "border-white/10 focus:ring-amber-400/50"
+                    )}
                   />
                 </div>
-                <p className="text-[10px] text-white/30 px-1">
-                  Set ₹0 for a free product.
-                </p>
+                {priceError
+                  ? <p className="text-xs text-rose-400 px-1">{priceError}</p>
+                  : <p className="text-[10px] text-white/30 px-1">Set ₹0 for a free product.</p>
+                }
               </div>
 
               <div className="space-y-2">

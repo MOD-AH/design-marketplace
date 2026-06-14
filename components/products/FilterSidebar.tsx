@@ -48,11 +48,11 @@ export default function FilterSidebar({ categories, isOpen, onClose }: Props) {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <SlidersHorizontal size={16} className="text-amber-400" />
-          <span className="font-semibold text-white text-sm">Filters</span>
+          <SlidersHorizontal size={15} className="text-[#C8873A]" />
+          <span className="font-bold text-[#1A1614] text-sm">Filters</span>
         </div>
         {hasFilters && (
-          <button onClick={clearAll} className="text-xs text-amber-400 hover:text-amber-300 flex items-center gap-1">
+          <button onClick={clearAll} className="flex items-center gap-1 text-xs font-semibold text-[#C8873A] hover:text-[#A86820] transition-colors">
             <X size={10} /> Clear all
           </button>
         )}
@@ -60,12 +60,14 @@ export default function FilterSidebar({ categories, isOpen, onClose }: Props) {
 
       {/* Category */}
       <div>
-        <p className="text-[11px] uppercase tracking-widest text-white/30 font-semibold mb-3">Category</p>
-        <div className="flex flex-col gap-1">
+        <p className="text-[10px] uppercase tracking-[0.18em] text-[#B5A99A] font-semibold mb-3">Category</p>
+        <div className="flex flex-col gap-0.5">
           <button
             onClick={() => update("category", null)}
-            className={`text-left text-sm px-3 py-2 rounded-xl transition-colors ${
-              !activeCategory ? "bg-amber-400/10 text-amber-400 font-medium" : "text-white/50 hover:text-white hover:bg-white/5"
+            className={`text-left text-sm px-3 py-2.5 rounded-xl transition-colors font-medium ${
+              !activeCategory
+                ? "bg-[#1A1614] text-white"
+                : "text-[#7A6F68] hover:text-[#1A1614] hover:bg-[#FAF7F2]"
             }`}
           >
             All Categories
@@ -74,8 +76,10 @@ export default function FilterSidebar({ categories, isOpen, onClose }: Props) {
             <button
               key={cat.id}
               onClick={() => update("category", cat.slug)}
-              className={`text-left text-sm px-3 py-2 rounded-xl transition-colors ${
-                activeCategory === cat.slug ? "bg-amber-400/10 text-amber-400 font-medium" : "text-white/50 hover:text-white hover:bg-white/5"
+              className={`text-left text-sm px-3 py-2.5 rounded-xl transition-colors ${
+                activeCategory === cat.slug
+                  ? "bg-[#FEF3E8] text-[#C8873A] font-semibold"
+                  : "text-[#7A6F68] hover:text-[#1A1614] hover:bg-[#FAF7F2]"
               }`}
             >
               {cat.name}
@@ -86,40 +90,44 @@ export default function FilterSidebar({ categories, isOpen, onClose }: Props) {
 
       {/* Price range */}
       <div>
-        <p className="text-[11px] uppercase tracking-widest text-white/30 font-semibold mb-3">Price Range (₹)</p>
+        <p className="text-[10px] uppercase tracking-[0.18em] text-[#B5A99A] font-semibold mb-3">Price Range (₹)</p>
         <div className="flex gap-2">
           <input
             type="number"
             placeholder="Min"
             defaultValue={minPrice}
             onBlur={(e) => update("minPrice", e.target.value || null)}
-            className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm text-white placeholder-white/20 focus:outline-none focus:border-amber-400/50"
+            className="w-full bg-white border border-[#E8E2D9] rounded-xl px-3 py-2 text-sm text-[#1A1614] placeholder-[#B5A99A] focus:outline-none focus:border-[#C8A882] focus:ring-2 focus:ring-[#C8873A]/15 shadow-sm"
           />
           <input
             type="number"
             placeholder="Max"
             defaultValue={maxPrice}
             onBlur={(e) => update("maxPrice", e.target.value || null)}
-            className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm text-white placeholder-white/20 focus:outline-none focus:border-amber-400/50"
+            className="w-full bg-white border border-[#E8E2D9] rounded-xl px-3 py-2 text-sm text-[#1A1614] placeholder-[#B5A99A] focus:outline-none focus:border-[#C8A882] focus:ring-2 focus:ring-[#C8873A]/15 shadow-sm"
           />
         </div>
       </div>
 
       {/* License type */}
       <div>
-        <p className="text-[11px] uppercase tracking-widest text-white/30 font-semibold mb-3">License Type</p>
-        <div className="flex flex-col gap-2">
+        <p className="text-[10px] uppercase tracking-[0.18em] text-[#B5A99A] font-semibold mb-3">License Type</p>
+        <div className="flex flex-col gap-2.5">
           {LICENSE_TYPES.map((lic) => (
             <label key={lic} className="flex items-center gap-3 cursor-pointer group">
               <div
                 onClick={() => update("license", activeLicense === lic ? null : lic)}
                 className={`w-4 h-4 rounded-full border-2 flex items-center justify-center transition-all ${
-                  activeLicense === lic ? "border-amber-400 bg-amber-400" : "border-white/20 group-hover:border-white/40"
+                  activeLicense === lic
+                    ? "border-[#C8873A] bg-[#C8873A]"
+                    : "border-[#D4C9BE] group-hover:border-[#C8A882]"
                 }`}
               >
-                {activeLicense === lic && <div className="w-1.5 h-1.5 rounded-full bg-black" />}
+                {activeLicense === lic && <div className="w-1.5 h-1.5 rounded-full bg-white" />}
               </div>
-              <span className={`text-sm capitalize transition-colors ${activeLicense === lic ? "text-white" : "text-white/50 group-hover:text-white/80"}`}>
+              <span className={`text-sm capitalize transition-colors ${
+                activeLicense === lic ? "text-[#1A1614] font-semibold" : "text-[#7A6F68] group-hover:text-[#1A1614]"
+              }`}>
                 {lic}
               </span>
             </label>
@@ -129,16 +137,16 @@ export default function FilterSidebar({ categories, isOpen, onClose }: Props) {
 
       {/* File format */}
       <div>
-        <p className="text-[11px] uppercase tracking-widest text-white/30 font-semibold mb-3">File Format</p>
+        <p className="text-[10px] uppercase tracking-[0.18em] text-[#B5A99A] font-semibold mb-3">File Format</p>
         <div className="grid grid-cols-3 gap-2">
           {FILE_FORMATS.map((fmt) => (
             <button
               key={fmt}
               onClick={() => update("format", activeFormat === fmt ? null : fmt)}
-              className={`text-xs font-mono py-1.5 rounded-lg border transition-all ${
+              className={`text-xs font-mono py-2 rounded-xl border transition-all font-medium ${
                 activeFormat === fmt
-                  ? "border-amber-400 bg-amber-400/10 text-amber-400"
-                  : "border-white/10 text-white/30 hover:border-white/30 hover:text-white/60"
+                  ? "border-[#C8873A] bg-[#FEF3E8] text-[#C8873A]"
+                  : "border-[#E8E2D9] bg-white text-[#9A8F88] hover:border-[#C8A882] hover:text-[#5C5248]"
               }`}
             >
               {fmt}
@@ -152,16 +160,16 @@ export default function FilterSidebar({ categories, isOpen, onClose }: Props) {
   return (
     <>
       {/* Desktop sidebar */}
-      <aside className="hidden lg:flex flex-col w-64 flex-shrink-0 bg-[#0d0f13] border border-white/5 rounded-2xl overflow-hidden sticky top-6 max-h-[calc(100vh-3rem)]">
+      <aside className="hidden lg:flex flex-col w-64 flex-shrink-0 bg-white border border-[#E8E2D9] rounded-2xl overflow-hidden sticky top-6 max-h-[calc(100vh-3rem)] shadow-sm">
         {sidebarContent}
       </aside>
 
       {/* Mobile bottom sheet */}
       {isOpen && (
         <div className="lg:hidden fixed inset-0 z-40 flex flex-col justify-end">
-          <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={onClose} />
-          <div className="relative bg-[#111318] border-t border-white/10 rounded-t-3xl max-h-[80vh]">
-            <div className="absolute top-3 left-1/2 -translate-x-1/2 w-10 h-1 rounded-full bg-white/20" />
+          <div className="absolute inset-0 bg-[#1A1614]/40 backdrop-blur-sm" onClick={onClose} />
+          <div className="relative bg-white border-t border-[#E8E2D9] rounded-t-3xl max-h-[80vh] shadow-2xl">
+            <div className="absolute top-3 left-1/2 -translate-x-1/2 w-10 h-1 rounded-full bg-[#E8E2D9]" />
             <div className="pt-6">
               {sidebarContent}
             </div>

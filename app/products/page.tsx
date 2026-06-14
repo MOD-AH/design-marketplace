@@ -21,19 +21,25 @@ export type SearchParams = {
 
 function ProductsPageSkeleton() {
   return (
-    <div className="min-h-screen bg-[#0a0b0e] text-white pt-20">
-      <div className="sticky top-[64px] z-30 border-b border-white/5 bg-[#0a0b0e]/90 backdrop-blur-xl">
+    <div className="min-h-screen bg-[#FAF7F2] pt-[72px]">
+      <div className="sticky top-[72px] z-30 border-b border-[#E8E2D9] bg-[#FAF7F2]/95 backdrop-blur-xl shadow-sm">
         <div className="mx-auto flex max-w-7xl items-center gap-3 px-4 py-3">
-          <div className="h-9 w-full max-w-md animate-pulse rounded-full bg-white/5" />
-          <div className="ml-auto h-9 w-28 animate-pulse rounded-full bg-white/5" />
-          <div className="h-9 w-20 animate-pulse rounded-full bg-white/5 lg:hidden" />
+          <div className="h-9 w-full max-w-md animate-pulse rounded-full bg-[#EDE8E1]" />
+          <div className="ml-auto h-9 w-28 animate-pulse rounded-full bg-[#EDE8E1]" />
+          <div className="h-9 w-20 animate-pulse rounded-full bg-[#EDE8E1] lg:hidden" />
         </div>
       </div>
       <div className="mx-auto flex max-w-7xl gap-6 px-4 py-6">
-        <div className="hidden h-[480px] w-64 shrink-0 animate-pulse rounded-2xl bg-white/5 lg:block" />
-        <div className="grid min-w-0 flex-1 grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
-          {Array.from({ length: 6 }).map((_, i) => (
-            <div key={i} className="animate-pulse rounded-2xl bg-white/5" style={{ aspectRatio: "3/4" }} />
+        <div className="hidden h-[480px] w-64 shrink-0 animate-pulse rounded-2xl bg-[#EDE8E1] lg:block" />
+        <div className="grid min-w-0 flex-1 grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
+          {Array.from({ length: 9 }).map((_, i) => (
+            <div key={i} className="rounded-2xl border border-[#E8E2D9] overflow-hidden bg-white shadow-sm">
+              <div className="aspect-[4/3] animate-pulse bg-[#EDE8E1]" />
+              <div className="p-4 space-y-2">
+                <div className="h-4 w-3/4 animate-pulse rounded bg-[#EDE8E1]" />
+                <div className="h-3 w-1/2 animate-pulse rounded bg-[#EDE8E1]" />
+              </div>
+            </div>
           ))}
         </div>
       </div>

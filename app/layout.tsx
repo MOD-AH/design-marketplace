@@ -39,6 +39,7 @@ export const viewport: Viewport = {
 import { Navbar } from "@/components/Navbar";
 import { ToastProvider } from "@/components/ui/Toast";
 import { PostHogProvider } from "@/components/PostHogProvider";
+import { Toaster } from "sonner";
 import Script from "next/script";
 
 export default function RootLayout({
@@ -54,6 +55,13 @@ export default function RootLayout({
             <Navbar />
             {children}
             <ToastProvider />
+            <Toaster
+              theme="dark"
+              position="bottom-right"
+              toastOptions={{
+                style: { background: "#111318", border: "1px solid rgba(255,255,255,0.08)", color: "#fff" },
+              }}
+            />
           </AuthProvider>
         </PostHogProvider>
         <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="lazyOnload" />

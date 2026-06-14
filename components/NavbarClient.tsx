@@ -53,19 +53,19 @@ export function NavbarClient({ categories }: { categories: Category[] }) {
       className={cn(
         "fixed left-0 right-0 top-0 z-50 border-b transition-all duration-300",
         isScrolled
-          ? "border-white/10 bg-black/80 py-3 backdrop-blur-xl"
-          : "border-transparent bg-transparent py-5",
+          ? "border-[#E8E2D9] bg-white/95 py-3 shadow-sm backdrop-blur-xl"
+          : "border-[#E8E2D9] bg-[#FAF7F2]/95 py-4 backdrop-blur-sm",
       )}
     >
       <div className="mx-auto max-w-7xl px-4 md:px-8">
         <div className="flex items-center justify-between gap-8">
           {/* Logo */}
           <Link href="/" className="group flex shrink-0 items-center gap-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-amber-400 to-orange-600 text-xl font-black text-black shadow-[0_0_15px_rgba(251,191,36,0.3)] transition-transform group-hover:scale-110">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#1A1614] text-sm font-black text-white shadow-sm transition-transform group-hover:scale-105">
               D
             </div>
-            <span className="text-2xl font-black tracking-tighter text-white">
-              Designr<span className="text-amber-400">.</span>
+            <span className="text-xl font-black tracking-tighter text-[#1A1614]">
+              Designr<span className="text-[#C8873A]">.</span>
             </span>
           </Link>
 
@@ -74,32 +74,32 @@ export function NavbarClient({ categories }: { categories: Category[] }) {
             onSubmit={handleSearch}
             className="group relative hidden flex-1 max-w-md md:block"
           >
-            <div className="pointer-events-none absolute inset-y-0 left-4 flex items-center text-white/40 transition-colors group-focus-within:text-amber-400">
-              <Search size={18} />
+            <div className="pointer-events-none absolute inset-y-0 left-4 flex items-center text-[#B5A99A] transition-colors group-focus-within:text-[#C8873A]">
+              <Search size={16} />
             </div>
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search premium assets..."
-              className="w-full rounded-2xl border border-white/10 bg-white/5 py-2.5 pl-12 pr-16 text-sm text-white placeholder:text-white/20 transition-all focus:border-amber-400/50 focus:outline-none focus:ring-2 focus:ring-amber-400/30 group-hover:bg-white/10"
+              className="w-full rounded-2xl border border-[#E8E2D9] bg-white py-2.5 pl-11 pr-16 text-sm text-[#1A1614] placeholder:text-[#B5A99A] shadow-sm transition-all focus:border-[#C8A882] focus:outline-none focus:ring-2 focus:ring-[#C8873A]/20"
             />
             <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center">
-              <span className="rounded border border-white/5 bg-white/10 px-1.5 py-0.5 font-mono text-[10px] text-white/40">
+              <span className="rounded border border-[#E8E2D9] bg-[#FAF7F2] px-1.5 py-0.5 font-mono text-[10px] text-[#B5A99A]">
                 ⌘K
               </span>
             </div>
           </form>
 
           {/* Right: desktop nav */}
-          <div className="hidden items-center gap-6 md:flex">
+          <div className="hidden items-center gap-5 md:flex">
             {/* Browse categories dropdown */}
             <div
               className="relative"
               onMouseEnter={() => setIsBrowseOpen(true)}
               onMouseLeave={() => setIsBrowseOpen(false)}
             >
-              <button className="flex items-center gap-1 py-2 text-sm font-medium text-white/70 transition-colors hover:text-white">
+              <button className="flex items-center gap-1 py-2 text-sm font-medium text-[#7A6F68] transition-colors hover:text-[#1A1614]">
                 Browse
                 <ChevronDown
                   size={14}
@@ -109,19 +109,19 @@ export function NavbarClient({ categories }: { categories: Category[] }) {
 
               {isBrowseOpen && (
                 <div className="absolute right-0 top-full w-48 pt-2 animate-in fade-in slide-in-from-top-2 duration-200">
-                  <div className="overflow-hidden rounded-2xl border border-white/10 bg-[#111318] p-2 shadow-2xl">
+                  <div className="overflow-hidden rounded-2xl border border-[#E8E2D9] bg-white p-2 shadow-xl">
                     <Link
                       href="/products"
-                      className="block rounded-xl px-4 py-2.5 text-sm text-white/60 transition-all hover:bg-white/5 hover:text-white"
+                      className="block rounded-xl px-4 py-2.5 text-sm text-[#7A6F68] transition-all hover:bg-[#FAF7F2] hover:text-[#1A1614]"
                     >
                       All Categories
                     </Link>
-                    <div className="my-1 h-px bg-white/5" />
+                    <div className="my-1 h-px bg-[#F0EBE4]" />
                     {categories.map((cat) => (
                       <Link
                         key={cat.id}
                         href={`/products?category=${cat.slug}`}
-                        className="block rounded-xl px-4 py-2.5 text-sm text-white/60 transition-all hover:bg-white/5 hover:text-white"
+                        className="block rounded-xl px-4 py-2.5 text-sm text-[#7A6F68] transition-all hover:bg-[#FAF7F2] hover:text-[#1A1614]"
                       >
                         {cat.name}
                       </Link>
@@ -132,31 +132,31 @@ export function NavbarClient({ categories }: { categories: Category[] }) {
             </div>
 
             <Link
-              href="/sell"
-              className="text-sm font-medium text-white/70 transition-colors hover:text-white"
+              href="/seller"
+              className="text-sm font-medium text-[#7A6F68] transition-colors hover:text-[#1A1614]"
             >
               Sell
             </Link>
 
-            <div className="h-4 w-px bg-white/10" />
+            <div className="h-4 w-px bg-[#E8E2D9]" />
 
             {/* Auth section */}
             {loading ? (
-              <div className="h-8 w-20 animate-pulse rounded-full bg-white/5" />
+              <div className="h-8 w-20 animate-pulse rounded-full bg-[#EDE8E1]" />
             ) : user ? (
               <div className="relative">
                 <button
                   onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-                  className="flex items-center gap-2 rounded-full border border-white/10 bg-white/5 py-1 pl-3 pr-1 transition-all hover:border-white/20"
+                  className="flex items-center gap-2 rounded-full border border-[#E8E2D9] bg-white py-1 pl-3 pr-1 shadow-sm transition-all hover:border-[#D4C9BE]"
                 >
-                  <span className="text-xs font-semibold text-white/80">
+                  <span className="text-xs font-semibold text-[#5C5248]">
                     {displayName}
                   </span>
-                  <div className="relative h-8 w-8 overflow-hidden rounded-full border border-white/20 bg-gradient-to-br from-amber-400 to-orange-600">
+                  <div className="relative h-8 w-8 overflow-hidden rounded-full border border-[#E8E2D9] bg-[#1A1614]">
                     {avatarUrl ? (
                       <Image src={avatarUrl} alt={displayName} fill className="object-cover" />
                     ) : (
-                      <span className="flex h-full w-full items-center justify-center font-bold text-black text-sm">
+                      <span className="flex h-full w-full items-center justify-center font-bold text-white text-sm">
                         {initial}
                       </span>
                     )}
@@ -165,39 +165,38 @@ export function NavbarClient({ categories }: { categories: Category[] }) {
 
                 {isUserMenuOpen && (
                   <>
-                    {/* Click-outside backdrop */}
                     <div
                       className="fixed inset-0 z-[-1]"
                       onClick={() => setIsUserMenuOpen(false)}
                     />
-                    <div className="absolute right-0 top-full mt-3 w-56 animate-in fade-in slide-in-from-top-2 duration-200 rounded-3xl border border-white/10 bg-[#111318] p-3 shadow-2xl">
-                      <div className="mb-2 border-b border-white/5 px-3 pb-3 pt-1">
-                        <p className="truncate text-sm font-bold text-white">
+                    <div className="absolute right-0 top-full mt-3 w-56 animate-in fade-in slide-in-from-top-2 duration-200 rounded-2xl border border-[#E8E2D9] bg-white p-2 shadow-xl">
+                      <div className="mb-2 border-b border-[#F0EBE4] px-3 pb-3 pt-2">
+                        <p className="truncate text-sm font-bold text-[#1A1614]">
                           {displayName}
                         </p>
-                        <p className="truncate text-xs text-white/40">{user.email}</p>
+                        <p className="truncate text-xs text-[#B5A99A]">{user.email}</p>
                       </div>
 
                       <Link
                         href="/profile"
                         onClick={() => setIsUserMenuOpen(false)}
-                        className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-white/60 transition-all hover:bg-white/5 hover:text-white"
+                        className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-[#7A6F68] transition-all hover:bg-[#FAF7F2] hover:text-[#1A1614]"
                       >
                         <User size={15} /> Profile
                       </Link>
                       <Link
                         href="/dashboard"
                         onClick={() => setIsUserMenuOpen(false)}
-                        className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-white/60 transition-all hover:bg-white/5 hover:text-white"
+                        className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-[#7A6F68] transition-all hover:bg-[#FAF7F2] hover:text-[#1A1614]"
                       >
                         <LayoutDashboard size={15} /> Dashboard
                       </Link>
 
-                      <div className="my-2 h-px bg-white/5" />
+                      <div className="my-1 h-px bg-[#F0EBE4]" />
 
                       <button
                         onClick={handleSignOut}
-                        className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-rose-400 transition-all hover:bg-rose-500/5 hover:text-rose-300"
+                        className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-rose-500 transition-all hover:bg-rose-50"
                       >
                         <LogOut size={15} /> Sign Out
                       </button>
@@ -206,17 +205,17 @@ export function NavbarClient({ categories }: { categories: Category[] }) {
                 )}
               </div>
             ) : (
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2.5">
                 <Link href="/login">
                   <Button
                     variant="outline"
-                    className="h-9 rounded-full border-white/10 px-5 text-white/80 hover:bg-white/5"
+                    className="h-9 rounded-full border-[#E8E2D9] bg-white px-5 text-sm text-[#5C5248] shadow-sm hover:border-[#D4C9BE] hover:text-[#1A1614]"
                   >
                     Log In
                   </Button>
                 </Link>
                 <Link href="/login">
-                  <Button className="h-9 rounded-full bg-amber-400 px-5 font-bold text-black hover:bg-amber-300">
+                  <Button className="h-9 rounded-full bg-[#1A1614] px-5 text-sm font-bold text-white hover:bg-[#2D2420]">
                     Sign Up
                   </Button>
                 </Link>
@@ -224,17 +223,17 @@ export function NavbarClient({ categories }: { categories: Category[] }) {
             )}
           </div>
 
-          {/* Mobile: search icon + hamburger */}
+          {/* Mobile */}
           <div className="flex items-center gap-2 md:hidden">
             <button
               onClick={() => router.push("/products")}
-              className="p-2 text-white/70 hover:text-white"
+              className="p-2 text-[#7A6F68] hover:text-[#1A1614]"
             >
               <Search size={20} />
             </button>
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="p-2 text-white/70 hover:text-white"
+              className="p-2 text-[#7A6F68] hover:text-[#1A1614]"
             >
               {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
@@ -244,15 +243,15 @@ export function NavbarClient({ categories }: { categories: Category[] }) {
 
       {/* Mobile menu */}
       {isMobileMenuOpen && (
-        <div className="animate-in slide-in-from-top-5 absolute left-0 right-0 top-full border-b border-white/10 bg-[#0a0b0e] p-6 duration-300 md:hidden">
+        <div className="animate-in slide-in-from-top-5 absolute left-0 right-0 top-full border-b border-[#E8E2D9] bg-[#FAF7F2] p-6 shadow-lg duration-300 md:hidden">
           <form onSubmit={handleSearch} className="relative mb-6">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-white/40" size={18} />
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-[#B5A99A]" size={16} />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search assets..."
-              className="w-full rounded-2xl border border-white/10 bg-white/5 py-3 pl-12 pr-4 text-sm text-white placeholder:text-white/20 focus:border-amber-400/50 focus:outline-none"
+              className="w-full rounded-2xl border border-[#E8E2D9] bg-white py-3 pl-11 pr-4 text-sm text-[#1A1614] placeholder:text-[#B5A99A] focus:border-[#C8A882] focus:outline-none"
             />
           </form>
 
@@ -262,33 +261,33 @@ export function NavbarClient({ categories }: { categories: Category[] }) {
                 key={cat.id}
                 href={`/products?category=${cat.slug}`}
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="rounded-xl bg-white/5 p-3 text-center text-sm font-medium text-white/70 transition-colors hover:bg-white/10 hover:text-white"
+                className="rounded-xl border border-[#E8E2D9] bg-white p-3 text-center text-sm font-medium text-[#7A6F68] transition-colors hover:border-[#D4C9BE] hover:text-[#1A1614]"
               >
                 {cat.name}
               </Link>
             ))}
           </div>
 
-          <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-2.5">
             {user ? (
               <>
                 <Link
                   href="/profile"
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="flex items-center gap-3 rounded-xl bg-white/5 px-4 py-3 text-sm text-white/70"
+                  className="flex items-center gap-3 rounded-xl border border-[#E8E2D9] bg-white px-4 py-3 text-sm text-[#7A6F68]"
                 >
                   <User size={16} /> Profile
                 </Link>
                 <Link
                   href="/dashboard"
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="flex items-center gap-3 rounded-xl bg-white/5 px-4 py-3 text-sm text-white/70"
+                  className="flex items-center gap-3 rounded-xl border border-[#E8E2D9] bg-white px-4 py-3 text-sm text-[#7A6F68]"
                 >
                   <LayoutDashboard size={16} /> Dashboard
                 </Link>
                 <button
                   onClick={handleSignOut}
-                  className="flex items-center gap-3 rounded-xl bg-rose-500/5 px-4 py-3 text-sm text-rose-400"
+                  className="flex items-center gap-3 rounded-xl bg-rose-50 px-4 py-3 text-sm text-rose-500"
                 >
                   <LogOut size={16} /> Sign Out
                 </button>
@@ -296,12 +295,12 @@ export function NavbarClient({ categories }: { categories: Category[] }) {
             ) : (
               <>
                 <Link href="/login" onClick={() => setIsMobileMenuOpen(false)}>
-                  <Button variant="outline" className="h-12 w-full rounded-2xl border-white/10">
+                  <Button variant="outline" className="h-12 w-full rounded-2xl border-[#E8E2D9]">
                     Log In
                   </Button>
                 </Link>
                 <Link href="/login" onClick={() => setIsMobileMenuOpen(false)}>
-                  <Button className="h-12 w-full rounded-2xl bg-amber-400 font-bold text-black">
+                  <Button className="h-12 w-full rounded-2xl bg-[#1A1614] font-bold text-white">
                     Sign Up
                   </Button>
                 </Link>

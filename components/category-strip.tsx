@@ -28,30 +28,31 @@ export function CategoryStrip({ categories }: { categories: CategoryRow[] }) {
   }
 
   return (
-    <section className="border-y border-border bg-secondary/30 py-6">
+    <section className="border-y border-[#E8E2D9] bg-[#FAF7F2] py-5">
       <div className="mx-auto max-w-7xl px-6">
-        <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-sm font-medium uppercase tracking-wider text-muted-foreground">
-            Browse by category
-          </h2>
-          <div className="flex gap-2">
+        <div className="flex items-center gap-4">
+          <span className="shrink-0 text-[10px] font-semibold uppercase tracking-[0.2em] text-[#B5A99A]">
+            Categories
+          </span>
+          <div className="h-px flex-1 bg-[#E8E2D9]" />
+          <div className="flex gap-1.5">
             <button
               onClick={() => scroll("left")}
-              className="flex h-8 w-8 items-center justify-center rounded-full border border-border bg-background text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+              className="flex h-7 w-7 items-center justify-center rounded-full border border-[#E8E2D9] bg-white text-[#9A8F88] shadow-sm transition-all hover:border-[#D4C9BE] hover:text-[#5C5248]"
             >
-              <ChevronLeft className="h-4 w-4" />
+              <ChevronLeft className="h-3.5 w-3.5" />
             </button>
             <button
               onClick={() => scroll("right")}
-              className="flex h-8 w-8 items-center justify-center rounded-full border border-border bg-background text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+              className="flex h-7 w-7 items-center justify-center rounded-full border border-[#E8E2D9] bg-white text-[#9A8F88] shadow-sm transition-all hover:border-[#D4C9BE] hover:text-[#5C5248]"
             >
-              <ChevronRight className="h-4 w-4" />
+              <ChevronRight className="h-3.5 w-3.5" />
             </button>
           </div>
         </div>
         <div
           ref={scrollRef}
-          className="flex gap-3 overflow-x-auto"
+          className="mt-4 flex gap-2 overflow-x-auto"
           style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
         >
           {categories.map((cat) => {
@@ -60,10 +61,10 @@ export function CategoryStrip({ categories }: { categories: CategoryRow[] }) {
               <Link
                 key={cat.id}
                 href={`/products?category=${cat.slug}`}
-                className="group flex shrink-0 items-center gap-3 rounded-full border border-border bg-background px-5 py-3 transition-all hover:border-foreground/30 hover:bg-secondary"
+                className="group flex shrink-0 items-center gap-2 rounded-full border border-[#E8E2D9] bg-white px-4 py-2 shadow-sm transition-all hover:border-[#C8A882] hover:bg-[#FEF3E8]"
               >
-                <Icon className="h-5 w-5 text-muted-foreground group-hover:text-foreground" />
-                <span className="text-sm font-medium">{cat.name}</span>
+                <Icon className="h-4 w-4 text-[#B5A99A] transition-colors group-hover:text-[#C8873A]" />
+                <span className="text-sm font-medium text-[#7A6F68] transition-colors group-hover:text-[#5C5248]">{cat.name}</span>
               </Link>
             )
           })}
